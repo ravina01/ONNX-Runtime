@@ -43,7 +43,13 @@ Resource - https://github.com/onnx/onnx/blob/main/docs/Operators.md
 ![image](https://github.com/user-attachments/assets/9175ee6b-2dc1-4d30-a79d-c8ee42c1ef53)
 
 
-
+- ONNX Runtime ->
+- High performace inference engine for onnx
+- founded by microsoft
+- full onnx spec support (v1.2+)
+- extensible and modular framework
+- 
+![image](https://github.com/user-attachments/assets/1c301e86-0f5d-42cc-afd5-89763f993c08)
 
 
 
