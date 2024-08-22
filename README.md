@@ -91,6 +91,8 @@ Conv + ReLU
 
 ![image](https://github.com/user-attachments/assets/60cd46f4-b9c7-41d6-b4bc-cc5785ec4ced)
 
+![image](https://github.com/user-attachments/assets/6013834a-9884-4a26-acb8-910798e37292)
+
 
 
 
