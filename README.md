@@ -186,18 +186,99 @@ Protobuf Schema: The ONNX model structure is defined by the ONNX protobuf schema
 - Note - hence, onnx runtime gauranteed execution even with limited hardware accelators support, it will always run on cpu
 - now comes excution part, we go though all the nodes sequentially, if the model is parallel enough you can enable the parallel execution mode.
 - or go though node by node sequentially.
-- 
-- 
+
 
 ![image](https://github.com/user-attachments/assets/1fd30d67-e8a8-471a-b1d4-5d33038c85eb)
 
+![image](https://github.com/user-attachments/assets/0b71227a-9ad6-4da0-9479-68dfc1b9bf04)
 
-
-
+![image](https://github.com/user-attachments/assets/740ada29-167d-4f32-9706-83ba596aaa20)
 
 ---
 
+#### Understanding ONNX Runtime and Its Role
+- ONNX Runtime is an inference engine developed by Microsoft to run machine learning models in the ONNX (Open Neural Network Exchange) format. It allows you to deploy models across different platforms and hardware, providing performance optimizations and hardware acceleration.
+
+#### ONNX Format and Protobuf
+When you export a model to the ONNX format, it is serialized using Protocol Buffers (protobuf). This means that your .onnx file contains a binary representation of your model, including its architecture, parameters (weights), and possibly some metadata.
+
+#### Role of ONNX Runtime
+ONNX Runtime is responsible for executing (running) the model described in the .onnx file. It reads the protobuf-serialized model, interprets the operations (layers), and performs inference by running data through the model. Here's how it fits into the overall workflow:
+
+1. Loading and Inference
+- Load Model: ONNX Runtime loads the serialized .onnx file.
+- Inference: ONNX Runtime takes input data, runs it through the model (executing the operations defined in the ONNX graph), and produces an output. This process is optimized for performance, often using techniques like hardware acceleration (e.g., GPU, TPU) and threading.
 
 
+2. Optimizing the Model
+- You can optimize your model at different stages, either before or after deploying it with ONNX Runtime. Optimizations typically include quantization and layer fusion.
+
+Optimization Stages:
+
+Before Deployment:
+
+- Quantization: This process reduces the model's size and computation requirements by converting the weights and activations from higher precision (e.g., FP32) to lower precision (e.g., INT8). Quantization can be done statically or dynamically.
+- Layer Fusion: Layer fusion combines consecutive operations (like Conv + ReLU + BatchNorm) into a single operation to improve performance. This is typically done during the graph optimization process.
+- Tools like onnxruntime-tools or onnxruntime-quantization can be used to perform these optimizations before the model is deployed.
+
+
+During Deployment (Runtime Optimization):
+
+- ONNX Runtime Optimizations: When you deploy the model using ONNX Runtime, it can apply additional optimizations at runtime. These optimizations include graph optimizations (such as node elimination and operator fusion), hardware-specific optimizations (like GPU acceleration), and thread management.
+- ONNX Runtime handles these optimizations automatically based on the capabilities of the hardware it’s running on.
+
+
+3. Quantization Process
+Quantization is a crucial step in optimizing your model for deployment on resource-constrained devices like specialized SoCs in surveillance cameras.
+
+Static Quantization: This is done before deployment. It requires calibration data (a small sample of the training data) to determine the scale and zero-point for each layer.
+
+Dynamic Quantization: This can be done during inference, where weights are quantized beforehand, but activations are quantized dynamically during runtime.
+
+
+4. Layer Fusion
+Layer fusion is a technique to combine multiple layers into a single operation to reduce computational overhead and improve performance. This process is often performed as part of graph optimization:
+
+Graph Optimization: ONNX Runtime performs graph-level optimizations, including layer fusion, during the model loading process. These optimizations help to reduce the number of operations the model needs to execute, which in turn speeds up inference.
+
+
+
+5. End-to-End Process
+Let's summarize the end-to-end process of working with ONNX Runtime, from model training to deployment:
+
+1. Train and Export:
+
+- Train your model using a framework like PyTorch or TensorFlow.
+- Export the model to the ONNX format using the framework's export tools.
+
+2. Model Optimization:
+
+- Apply optimizations like quantization and layer fusion using ONNX Runtime or associated tools.
+- Example: Quantize the model using onnxruntime-quantization.
+
+3. Load the Model with ONNX Runtime:
+
+- Load the optimized .onnx model using ONNX Runtime in your application.
+- ONNX Runtime will apply runtime-specific optimizations based on the hardware.
+
+4. Preprocess Input Data:
+
+- Preprocess input data (e.g., video frames from a camera) to match the model's expected input format.
+
+5. Inference:
+
+- Use ONNX Runtime to perform inference, where it reads input data, processes it through the model, and outputs predictions.
+
+6. Post-process Output:
+
+Interpret the model’s output (e.g., detecting objects in a video frame) and use it in your application.
+
+7. Deployment and Monitoring:
+
+-  Deploy the model on the target hardware (e.g., surveillance camera with specialized SoC).
+- Monitor the performance and make adjustments if necessary.
+
+
+---
 **Yes, you can run ONNX models using ONNX Runtime with TensorRT as an execution provider. This setup allows you to take advantage of TensorRT's optimizations while keeping the model in the ONNX format**
 
